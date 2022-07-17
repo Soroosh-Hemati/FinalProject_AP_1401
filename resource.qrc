@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix = "/images">
+        <file alias="playersPage">resource/images/playersPage.jpg</file>
+        <file alias="box">resource/images/box.png</file>
+        <file alias="wall">resource/images/wall.png</file>
+        <file alias="timeIsUp">resource/images/timeIsUp.png</file>
+        <file alias="bomb">resource/images/bomb.png</file>
+        <file alias="Fire_x">resource/images/Fire_x.png</file>
+        <file alias="Fire_y">resource/images/Fire_y.png</file>
+        <file alias="P1_down">resource/images/p1_down.png</file>
+        <file alias="P1_up">resource/images/p1_up.png</file>
+        <file alias="P1_right">resource/images/p1_right.png</file>
+        <file alias="P1_left">resource/images/p1_left.png</file>
+        <file alias="P2_down">resource/images/p2_down.png</file>
+        <file alias="P2_up">resource/images/p2_up.png</file>
+        <file alias="P2_right">resource/images/p2_right.png</file>
+        <file alias="P2_left">resource/images/p2_left.png</file>
+        <file alias="gameBG">resource/images/gameBG.png</file>
+        <file alias="InfosBG">resource/images/InfosBG.png</file>
+    </qresource>
+</RCC>
