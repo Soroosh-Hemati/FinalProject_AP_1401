@@ -17,5 +17,10 @@
         <file alias="P2_left">resource/images/p2_left.png</file>
         <file alias="gameBG">resource/images/gameBG.png</file>
         <file alias="InfosBG">resource/images/InfosBG.png</file>
+        <file alias="redHeart">resource/images/redHeart.png</file>
+        <file alias="blueHeart">resource/images/blueHeart.png</file>
+        <file alias="Player1wins">resource/images/Player1wins.png</file>
+        <file alias="Player2wins">resource/images/Player2wins.png</file>
+        <file alias="Tie">resource/images/Tie.png</file>
     </qresource>
 </RCC>
