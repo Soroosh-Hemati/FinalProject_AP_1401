@@ -15,6 +15,7 @@ protected:
 
 private:
     QGraphicsScene *scene;
+    int BOMB_EXPLODE_RANGE;
     int timeOfGame;
     int numOfLives;
     int timeToSecond;
@@ -44,9 +45,10 @@ public:
     void fireDrawer();
     void p1removeBox();
     void p2removeBox();
-    void player1Destroys();
-    void player2Destroys();
+    void bomb1Destroys();
+    void bomb2Destroys();
     void gameTimer();
+
 public slots:
             void pauseButtonPressed();
     void exitButtonPressed();

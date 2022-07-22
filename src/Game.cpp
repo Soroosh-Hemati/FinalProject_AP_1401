@@ -15,6 +15,7 @@ Game::Game(QString player1Name, QString player2Name, QString numOfLivesToString,
     timeOfGame = timeOfGameToString.toInt();
     numOfLives = numOfLivesToString.toInt();
     timeToSecond = timeOfGame * 60;
+    BOMB_EXPLODE_RANGE = 2;
     //WINDOW OPTIONS
     showFullScreen();
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -292,7 +293,7 @@ void Game::p1bombExploded() {
     scene->removeItem(p1bomb);
     //delete p1bomb;
     p1removeBox();
-    player1Destroys();
+    bomb1Destroys();
     //fireDrawer();
     canP1PlantBomb = true;
 }
@@ -327,44 +328,83 @@ void Game::fireDrawer() {
 
 void Game::p1removeBox() {
     int c = 0;
-    for (int i = 0; i < boxes.length(); i++) {
+    bool firstBoxFounded1 = false;
+    int bomb_x1 = p1bomb->x() / 102;
+    int bomb_y1 = p1bomb->y() / 57;
 
-        if ((boxes.at(i)->getPosX() == p1bomb->x() &&
-             boxes.at(i)->getPosY() == p1bomb->y() - (QWidget::height() / 15))) {
-            boxes.at(i)->setVisible(false);
-            boxes.removeOne(boxes.at(i));
-            c += 5;
+    for (int j = 1; j <= BOMB_EXPLODE_RANGE; j++) {
+        for (int i = 0; i < boxes.length(); i++) {
+
+            if ((boxes.at(i)->getPosX() == p1bomb->x() &&
+                 boxes.at(i)->getPosY() == p1bomb->y() - (QWidget::height() / 15) * j)) {
+                boxes.at(i)->setVisible(false);
+                boxes.removeOne(boxes.at(i));
+                firstBoxFounded1 = true;
+                c += 5;
+                break;
+            }
+        }
+        if (!firstBoxFounded1 && j == 1 && bomb_x1 % 2 == 0 && (bomb_y1 - 1) % 2 == 0) {
             break;
         }
     }
-    for (int i = 0; i < boxes.length(); i++) {
-        if ((boxes.at(i)->getPosX() == p1bomb->x() &&
-             boxes.at(i)->getPosY() == p1bomb->y() + (QWidget::height() / 15))) {
-            boxes.at(i)->setVisible(false);
-            boxes.removeOne(boxes.at(i));
-            c += 5;
+    bool firstBoxFounded2 = false;
+    int bomb_x2 = p1bomb->x() / 102;
+    int bomb_y2 = p1bomb->y() / 57;
+    for (int j = 1; j <= BOMB_EXPLODE_RANGE; ++j) {
+        for (int i = 0; i < boxes.length(); i++) {
+
+            if ((boxes.at(i)->getPosX() == p1bomb->x() &&
+                 boxes.at(i)->getPosY() == p1bomb->y() + (QWidget::height() / 15) * j)) {
+                boxes.at(i)->setVisible(false);
+                boxes.removeOne(boxes.at(i));
+                firstBoxFounded2 = true;
+                c += 5;
+                break;
+            }
+        }
+        if (!firstBoxFounded2 && j == 1 && bomb_x2 % 2 == 0 && (bomb_y2 + 1) % 2 == 0) {
+            break;
+        }
+    }
+    bool firstBoxFounded3 = false;
+    int bomb_x3 = p1bomb->x() / 102;
+    int bomb_y3 = p1bomb->y() / 57;
+    for (int j = 1; j <= BOMB_EXPLODE_RANGE; j++) {
+        for (int i = 0; i < boxes.length(); i++) {
+
+            if ((boxes.at(i)->getPosY() == p1bomb->y() &&
+                 boxes.at(i)->getPosX() == p1bomb->x() + (QWidget::width() / 15) * j)) {
+                boxes.at(i)->setVisible(false);
+                boxes.removeOne(boxes.at(i));
+                firstBoxFounded3 = true;
+                c += 5;
+                break;
+            }
+        }
+        if (!firstBoxFounded3 && j == 1 && (bomb_x3 + 1) % 2 == 0 && (bomb_y3 % 2 == 0)) {
             break;
         }
 
     }
-    for (int i = 0; i < boxes.length(); i++) {
-        if ((boxes.at(i)->getPosY() == p1bomb->y() &&
-             boxes.at(i)->getPosX() == p1bomb->x() + (QWidget::width() / 15))) {
-            boxes.at(i)->setVisible(false);
-            boxes.removeOne(boxes.at(i));
-            c += 5;
-            break;
-        }
-    }
-    for (int i = 0; i < boxes.length(); i++) {
-        if ((boxes.at(i)->getPosY() == p1bomb->y() &&
-             boxes.at(i)->getPosX() == p1bomb->x() - (QWidget::width() / 15))) {
-            boxes.at(i)->setVisible(false);
-            boxes.removeOne(boxes.at(i));
-            c += 5;
-            break;
-        }
+    bool firstBoxFounded4 = false;
+    int bomb_x4 = p1bomb->x() / 102;
+    int bomb_y4 = p1bomb->y() / 57;
+    for (int j = 1; j <= BOMB_EXPLODE_RANGE; j++) {
+        for (int i = 0; i < boxes.length(); i++) {
 
+            if ((boxes.at(i)->getPosY() == p1bomb->y() &&
+                 boxes.at(i)->getPosX() == p1bomb->x() - (QWidget::width() / 15) * j)) {
+                boxes.at(i)->setVisible(false);
+                boxes.removeOne(boxes.at(i));
+                firstBoxFounded4 = true;
+                c += 5;
+                break;
+            }
+        }
+        if (!firstBoxFounded4 && j == 1 && (bomb_x4 - 1) % 2 == 0 && (bomb_y4) % 2 == 0) {
+            break;
+        }
     }
     players.at(0)->score += c;
     player1ScoreLabel->setPlainText(QString::number(players.at(0)->score));
@@ -373,7 +413,7 @@ void Game::p1removeBox() {
 void Game::p2bombExploded() {
     p2bomb->setVisible(false);
     p2removeBox();
-    player2Destroys();
+    bomb2Destroys();
     //fireDrawer();
     canP2PlantBomb = true;
 }
@@ -385,6 +425,7 @@ void Game::p2bombPlanted() {
     p2bomb = new Bomb(cellWidth * qRound(players.at(1)->x() / cellWidth),
                       cellHeight * qRound(players.at(1)->y() / cellHeight),
                       QWidget::width() / 15, QWidget::height() / 15);
+
     scene->addItem(p2bomb);
     QTimer::singleShot(4000, this, SLOT(p2bombExploded()));
     canP2PlantBomb = false;
@@ -392,73 +433,126 @@ void Game::p2bombPlanted() {
 
 void Game::p2removeBox() {
     int c = 0;
-    for (int i = 0; i < boxes.length(); i++) {
+    bool firstBoxFounded1 = false;
+    int bomb_x1 = p2bomb->x() / 102;
+    int bomb_y1 = p2bomb->y() / 57;
 
-        if ((boxes.at(i)->getPosX() == p2bomb->x() &&
-             boxes.at(i)->getPosY() == p2bomb->y() - (QWidget::height() / 15))) {
-            boxes.at(i)->setVisible(false);
-            boxes.removeOne(boxes.at(i));
-            c += 5;
+    for (int j = 1; j <= BOMB_EXPLODE_RANGE; j++) {
+        for (int i = 0; i < boxes.length(); i++) {
+
+            if ((boxes.at(i)->getPosX() == p2bomb->x() &&
+                 boxes.at(i)->getPosY() == p2bomb->y() - (QWidget::height() / 15) * j)) {
+                boxes.at(i)->setVisible(false);
+                boxes.removeOne(boxes.at(i));
+                firstBoxFounded1 = true;
+                c += 5;
+                break;
+            }
+        }
+        if (!firstBoxFounded1 && j == 1 && bomb_x1 % 2 == 0 && (bomb_y1 - 1) % 2 == 0) {
             break;
         }
     }
-    for (int i = 0; i < boxes.length(); i++) {
-        if ((boxes.at(i)->getPosX() == p2bomb->x() &&
-             boxes.at(i)->getPosY() == p2bomb->y() + (QWidget::height() / 15))) {
-            boxes.at(i)->setVisible(false);
-            boxes.removeOne(boxes.at(i));
-            c += 5;
+    bool firstBoxFounded2 = false;
+    int bomb_x2 = p2bomb->x() / 102;
+    int bomb_y2 = p2bomb->y() / 57;
+    for (int j = 1; j <= BOMB_EXPLODE_RANGE; ++j) {
+        for (int i = 0; i < boxes.length(); i++) {
+
+            if ((boxes.at(i)->getPosX() == p2bomb->x() &&
+                 boxes.at(i)->getPosY() == p2bomb->y() + (QWidget::height() / 15) * j)) {
+                boxes.at(i)->setVisible(false);
+                boxes.removeOne(boxes.at(i));
+                firstBoxFounded2 = true;
+                c += 5;
+                break;
+            }
+        }
+        if (!firstBoxFounded2 && j == 1 && bomb_x2 % 2 == 0 && (bomb_y2 + 1) % 2 == 0) {
+            break;
+        }
+    }
+    bool firstBoxFounded3 = false;
+    int bomb_x3 = p2bomb->x() / 102;
+    int bomb_y3 = p2bomb->y() / 57;
+    for (int j = 1; j <= BOMB_EXPLODE_RANGE; j++) {
+        for (int i = 0; i < boxes.length(); i++) {
+
+            if ((boxes.at(i)->getPosY() == p2bomb->y() &&
+                 boxes.at(i)->getPosX() == p2bomb->x() + (QWidget::width() / 15) * j)) {
+                boxes.at(i)->setVisible(false);
+                boxes.removeOne(boxes.at(i));
+                firstBoxFounded3 = true;
+                c += 5;
+                break;
+            }
+        }
+        if (!firstBoxFounded3 && j == 1 && (bomb_x3 + 1) % 2 == 0 && (bomb_y3 % 2 == 0)) {
             break;
         }
 
     }
-    for (int i = 0; i < boxes.length(); i++) {
-        if ((boxes.at(i)->getPosY() == p2bomb->y() &&
-             boxes.at(i)->getPosX() == p2bomb->x() + (QWidget::width() / 15))) {
-            boxes.at(i)->setVisible(false);
-            boxes.removeOne(boxes.at(i));
-            c += 5;
-            break;
-        }
-    }
-    for (int i = 0; i < boxes.length(); i++) {
-        if ((boxes.at(i)->getPosY() == p2bomb->y() &&
-             boxes.at(i)->getPosX() == p2bomb->x() - (QWidget::width() / 15))) {
-            boxes.at(i)->setVisible(false);
-            boxes.removeOne(boxes.at(i));
-            c += 5;
-            break;
-        }
+    bool firstBoxFounded4 = false;
+    int bomb_x4 = p2bomb->x() / 102;
+    int bomb_y4 = p2bomb->y() / 57;
+    for (int j = 1; j <= BOMB_EXPLODE_RANGE; j++) {
+        for (int i = 0; i < boxes.length(); i++) {
 
+            if ((boxes.at(i)->getPosY() == p2bomb->y() &&
+                 boxes.at(i)->getPosX() == p2bomb->x() - (QWidget::width() / 15) * j)) {
+                boxes.at(i)->setVisible(false);
+                boxes.removeOne(boxes.at(i));
+                firstBoxFounded4 = true;
+                c += 5;
+                break;
+            }
+        }
+        if (!firstBoxFounded4 && j == 1 && (bomb_x4 - 1) % 2 == 0 && (bomb_y4) % 2 == 0) {
+            break;
+        }
     }
     players.at(1)->score += c;
     player2ScoreLabel->setPlainText(QString::number(players.at(1)->score));
 }
 
-void Game::player1Destroys() {
-    int c = 0;
-    int n = 0;
-    if (p1bomb->x() >= players.at(0)->x() && p1bomb->x() - (QWidget::width() / 15) <= players.at(0)->x() &&
-        players.at(0)->y() >= p1bomb->y() && players.at(0)->y() <= p1bomb->y()+(QWidget::height() / 15)) {
-        c += 50;
-        players.at(0)->numOfLives--;
-    }else if(p1bomb->x() <= players.at(0)->x() && p1bomb->x() + (QWidget::width() / 15)*2 >= players.at(0)->x() &&
-             players.at(0)->y() >= p1bomb->y() && players.at(0)->y() <= p1bomb->y()+(QWidget::height() / 15)){
-        c += 50;
-        players.at(0)->numOfLives--;
-    }else if(p1bomb->x() <= players.at(0)->x() && p1bomb->x() + (QWidget::width() / 15) >= players.at(0)->x() &&
-             players.at(0)->y() <= p1bomb->y() && players.at(0)->y() >= p1bomb->y()-(QWidget::height() / 15)){
-        c += 50;
-        players.at(0)->numOfLives--;
-    }else if(p1bomb->x() <= players.at(0)->x() && p1bomb->x() + (QWidget::width() / 15) >= players.at(0)->x() &&
-             players.at(0)->y() >= p1bomb->y() && players.at(0)->y() <= p1bomb->y()+(QWidget::height() / 15)*2){
-        c += 50;
-        players.at(0)->numOfLives--;
+void Game::bomb1Destroys() {
+    for(int i = 0 ; i<2 ; i++) {
+        int c = 0;
+        int n = 0;
+
+        if (p1bomb->x() >= players.at(i)->x() &&
+            p1bomb->x() - (QWidget::width() / 15) * BOMB_EXPLODE_RANGE <= players.at(i)->x() &&
+            players.at(i)->y() >= p1bomb->y() && players.at(i)->y() <= p1bomb->y() + (QWidget::height() / 15)) {
+            c += 50;
+            players.at(i)->numOfLives--;
+        } else if (p1bomb->x() <= players.at(i)->x() &&
+                   p1bomb->x() + (QWidget::width() / 15) * (BOMB_EXPLODE_RANGE + 1) >= players.at(i)->x() &&
+                   players.at(i)->y() >= p1bomb->y() && players.at(i)->y() <= p1bomb->y() + (QWidget::height() / 15)) {
+            c += 50;
+            players.at(i)->numOfLives--;
+        } else if (p1bomb->x() <= players.at(i)->x() && p1bomb->x() + (QWidget::width() / 15) >= players.at(i)->x() &&
+                   players.at(i)->y() <= p1bomb->y() &&
+                   players.at(i)->y() >= p1bomb->y() - (QWidget::height() / 15) * BOMB_EXPLODE_RANGE) {
+            c += 50;
+            players.at(i)->numOfLives--;
+        } else if (p1bomb->x() <= players.at(i)->x() && p1bomb->x() + (QWidget::width() / 15) >= players.at(i)->x() &&
+                   players.at(i)->y() >= p1bomb->y() &&
+                   players.at(i)->y() <= p1bomb->y() + (QWidget::height() / 15) * (BOMB_EXPLODE_RANGE + 1)) {
+            c += 50;
+            players.at(i)->numOfLives--;
+        }
+        if(i==0){
+            players.at(1)->score += c;
+            player2ScoreLabel->setPlainText(QString::number(players.at(1)->score));
+            player1NumOfLives->setPlainText(QString::number(players.at(0)->numOfLives));
+        }else if(i==1){
+            players.at(0)->score += c;
+            player1ScoreLabel->setPlainText(QString::number(players.at(0)->score));
+            player2NumOfLives->setPlainText(QString::number(players.at(1)->numOfLives));
+        }
     }
-    players.at(1)->score += c;
-    player2ScoreLabel->setPlainText(QString::number(players.at(1)->score));
-    player1NumOfLives->setPlainText(QString::number(players.at(0)->numOfLives));
 }
+
 
 void Game::gameTimer() {
     qTimer_gameTimer = new QTimer(this);
@@ -526,28 +620,40 @@ void Game::returnToHomeButtonPressed() {
 
 }
 
-void Game::player2Destroys() {
-    int c = 0;
-    int n = 0;
-    if (p2bomb->x() >= players.at(1)->x() && p2bomb->x() - (QWidget::width() / 15) <= players.at(1)->x() &&
-        players.at(1)->y() >= p2bomb->y() && players.at(1)->y() <= p2bomb->y()+(QWidget::height() / 15)) {
-        c += 50;
-        players.at(1)->numOfLives--;
-    }else if(p2bomb->x() <= players.at(1)->x() && p2bomb->x() + (QWidget::width() / 15)*2 >= players.at(1)->x() &&
-             players.at(1)->y() >= p2bomb->y() && players.at(1)->y() <= p2bomb->y()+(QWidget::height() / 15)){
-        c += 50;
-        players.at(1)->numOfLives--;
-    }else if(p2bomb->x() <= players.at(1)->x() && p2bomb->x() + (QWidget::width() / 15) >= players.at(1)->x() &&
-             players.at(1)->y() <= p2bomb->y() && players.at(1)->y() >= p2bomb->y()-(QWidget::height() / 15)){
-        c += 50;
-        players.at(1)->numOfLives--;
-    }else if(p2bomb->x() <= players.at(1)->x() && p2bomb->x() + (QWidget::width() / 15) >= players.at(1)->x() &&
-             players.at(1)->y() >= p2bomb->y() && players.at(1)->y() <= p2bomb->y()+(QWidget::height() / 15)*2){
-        c += 50;
-        players.at(1)->numOfLives--;
+void Game::bomb2Destroys() {
+    for(int i = 0 ; i<2 ; i++) {
+        int c = 0;
+        int n = 0;
+        if (p2bomb->x() >= players.at(i)->x() &&
+            p2bomb->x() - (QWidget::width() / 15) * BOMB_EXPLODE_RANGE <= players.at(i)->x() &&
+            players.at(i)->y() >= p2bomb->y() && players.at(i)->y() <= p2bomb->y() + (QWidget::height() / 15)) {
+            c += 50;
+            players.at(i)->numOfLives--;
+        } else if (p2bomb->x() <= players.at(i)->x() &&
+                   p2bomb->x() + (QWidget::width() / 15) * (BOMB_EXPLODE_RANGE + 1) >= players.at(i)->x() &&
+                   players.at(i)->y() >= p2bomb->y() && players.at(i)->y() <= p2bomb->y() + (QWidget::height() / 15)) {
+            c += 50;
+            players.at(i)->numOfLives--;
+        } else if (p2bomb->x() <= players.at(i)->x() && p2bomb->x() + (QWidget::width() / 15) >= players.at(i)->x() &&
+                   players.at(i)->y() <= p2bomb->y() &&
+                   players.at(i)->y() >= p2bomb->y() - (QWidget::height() / 15) * BOMB_EXPLODE_RANGE) {
+            c += 50;
+            players.at(i)->numOfLives--;
+        } else if (p2bomb->x() <= players.at(i)->x() && p2bomb->x() + (QWidget::width() / 15) >= players.at(i)->x() &&
+                   players.at(i)->y() >= p2bomb->y() &&
+                   players.at(i)->y() <= p2bomb->y() + (QWidget::height() / 15) * (BOMB_EXPLODE_RANGE + 1)) {
+            c += 50;
+            players.at(i)->numOfLives--;
+        }
+        if(i==0){
+            players.at(1)->score += c;
+            player2ScoreLabel->setPlainText(QString::number(players.at(1)->score));
+            player1NumOfLives->setPlainText(QString::number(players.at(0)->numOfLives));
+        }else if(i==1){
+            players.at(0)->score += c;
+            player1ScoreLabel->setPlainText(QString::number(players.at(0)->score));
+            player2NumOfLives->setPlainText(QString::number(players.at(1)->numOfLives));
+        }
     }
 
-    players.at(0)->score += c;
-    player1ScoreLabel->setPlainText(QString::number(players.at(0)->score));
-    player2NumOfLives->setPlainText(QString::number(players.at(1)->numOfLives));
 }
