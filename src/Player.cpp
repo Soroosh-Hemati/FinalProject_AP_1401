@@ -1,4 +1,6 @@
 #include "Player.h"
+#include "Wall.h"
+#include <QKeyEvent>
 Player::Player(QString path , int pos_x, int pos_y, int w, int h) : QGraphicsPixmapItem() {
     width = w;
     height = h;
@@ -25,3 +27,5 @@ void Player::destroyPlayerScore() {
 QString Player::getScore() {
     return QString::number(score);
 }
+
+
