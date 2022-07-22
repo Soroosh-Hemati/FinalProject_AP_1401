@@ -6,7 +6,7 @@
 #include "TextField.h"
 
 class Home : public QGraphicsView{
-Q_OBJECT
+    Q_OBJECT
 private:
     TextField *player1TextField;
     TextField *player2TextField;
@@ -16,13 +16,13 @@ public:
     Home();
     void saveInfosInFile();
     void readPlayersNamesInFile();
+    bool checkTextFieldInputs();
 public slots:
-    void gameWindowOpened();
+            void gameWindowOpened();
     void exitButtonClicked();
 
 
 };
-
 
 
 #endif //FINALPROJECT_HOME_H
