@@ -2,7 +2,9 @@
 #define FINALPROJECT_WALL_H
 
 #include <QGraphicsPixmapItem>
-class Wall: public QGraphicsPixmapItem{
+#include "Blocks.h"
+
+class Wall: public QGraphicsPixmapItem, public Blocks{
 private:
     int width;
     int height;

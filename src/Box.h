@@ -2,7 +2,9 @@
 #define FINALPROJECT_BOX_H
 
 #include <QGraphicsPixmapItem>
-class Box: public QGraphicsPixmapItem{
+#include "Blocks.h"
+
+class Box: public QGraphicsPixmapItem , public Blocks{
 private:
     int width;
     int height;

@@ -13,7 +13,7 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(untitled main.cpp src/AddPhoto.cpp src/AddPhoto.h src/Bomb.cpp src/Bomb.h src/Box.cpp src/Box.h src/Button.cpp src/Button.h src/Game.cpp src/Game.h src/Home.cpp src/Home.h src/Label.cpp src/Label.h src/Player.cpp src/Player.h src/TextField.cpp src/TextField.h src/Wall.cpp src/Wall.h)
+add_executable(untitled main.cpp src/AddPhoto.cpp src/AddPhoto.h src/Bomb.cpp src/Bomb.h src/Box.cpp src/Box.h src/Button.cpp src/Button.h src/Game.cpp src/Game.h src/Home.cpp src/Home.h src/Label.cpp src/Label.h src/Player.cpp src/Player.h src/TextField.cpp src/TextField.h src/Wall.cpp src/Wall.h src/Blocks.cpp src/Blocks.h)
 target_link_libraries(untitled
         Qt::Core
         Qt::Gui
