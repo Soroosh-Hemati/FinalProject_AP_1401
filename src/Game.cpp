@@ -53,7 +53,8 @@ Game::Game(QString player1Name, QString player2Name, QString numOfLivesToString,
              random_i == 14 || random_j == 14) || (random_i == 2 && random_j == 1) ||
             (random_i == 12 && random_j == 13) || (random_i == 11 && random_j == 13) ||
             (random_i == 3 && random_j == 1) ||
-            (random_i % 2 == 0 && random_j % 2 == 0) || alreadyMade) {
+            (random_i % 2 == 0 && random_j % 2 == 0) || (random_i == 4 && random_j == 1) ||
+            (random_i == 10 && random_j == 13) || alreadyMade) {
             i--;
             continue;
         } else {
@@ -132,8 +133,8 @@ Game::Game(QString player1Name, QString player2Name, QString numOfLivesToString,
 }
 
 void Game::keyPressEvent(QKeyEvent *event) {
-
-
+    player1MovementSpeed = 8;
+    player2MovementSpeed = 8;
     auto player1 = players.at(0);
     auto player2 = players.at(1);
 
@@ -150,35 +151,35 @@ void Game::keyPressEvent(QKeyEvent *event) {
     auto player2NewY = player2->y();
 
     if (event->key() == Qt::Key_S && !isGamePaused) {
-        player1NewY = player1->y() + 8;
+        player1NewY = player1->y() + player1MovementSpeed;
         player1->changeFrame(":/images/P1_down");
     }
     if (event->key() == Qt::Key_W && !isGamePaused) {
-        player1NewY = player1->y() - 8;
+        player1NewY = player1->y() - player1MovementSpeed;
         player1->changeFrame(":/images/P1_up");
     }
     if (event->key() == Qt::Key_A && !isGamePaused) {
-        player1NewX = player1->x() - 8;
+        player1NewX = player1->x() - player1MovementSpeed;
         player1->changeFrame(":/images/P1_left");
     }
     if (event->key() == Qt::Key_D && !isGamePaused) {
-        player1NewX = player1->x() + 8;
+        player1NewX = player1->x() + player1MovementSpeed;
         player1->changeFrame(":/images/P1_right");
     }
     if (event->key() == Qt::Key_8 && !isGamePaused) {
-        player2NewY = player2->y() - 8;
+        player2NewY = player2->y() - player2MovementSpeed;
         player2->changeFrame(":/images/P2_up");
     }
     if (event->key() == Qt::Key_5 && !isGamePaused) {
-        player2NewY = player2->y() + 8;
+        player2NewY = player2->y() + player2MovementSpeed;
         player2->changeFrame(":/images/P2_down");
     }
     if (event->key() == Qt::Key_4 && !isGamePaused) {
-        player2NewX = player2->x() - 8;
+        player2NewX = player2->x() - player2MovementSpeed;
         player2->changeFrame(":/images/P2_left");
     }
     if (event->key() == Qt::Key_6 && !isGamePaused) {
-        player2NewX = player2->x() + 8;
+        player2NewX = player2->x() + player2MovementSpeed;
         player2->changeFrame(":/images/P2_right");
     }
 
@@ -291,39 +292,9 @@ void Game::p1bombPlanted() {
 
 void Game::p1bombExploded() {
     scene->removeItem(p1bomb);
-    //delete p1bomb;
     p1removeBox();
     bomb1Destroys();
-    //fireDrawer();
     canP1PlantBomb = true;
-}
-
-void Game::fireDrawer() {
-//    if (bomb->x() - (QWidget::height() / 15) > QWidget::height() / 15 &&
-//        (bomb->x() - (QWidget::height() / 15) % 2) != 0) {
-//        auto fire_negative_x = new AddPhoto(":/images/Fire_x", bomb->x() - (QWidget::width() / 15), bomb->y(),
-//                                            (QWidget::width() / 15)-20,
-//                                            QWidget::height() / 15);
-//        scene->addItem(fire_negative_x);
-//    }
-//    if (bomb->x() + 15 != 0 && (bomb->x() + 15 % 2) != 0) {
-//        auto fire_x = new AddPhoto(":/images/Fire_x", bomb->x() + (QWidget::width() / 15), bomb->y(),
-//                                   (QWidget::width() / 15)-20,
-//                                   QWidget::height() / 15);
-//        scene->addItem(fire_x);
-//    }
-//    if (bomb->y() - 15 != 0 && (bomb->y() - 15 % 2) != 0) {
-//        auto fire_negative_y = new AddPhoto(":/images/Fire_y", bomb->x(), bomb->y() - (QWidget::height() / 15),
-//                                            QWidget::width() / 15,
-//                                            (QWidget::height() / 15)-20);
-//        scene->addItem(fire_negative_y);
-//    }
-//    if (bomb->y() + 15 != 0 && (bomb->y() + 15 % 2) != 0) {
-//        auto fire_y = new AddPhoto(":/images/Fire_y", bomb->x(), bomb->y() + (QWidget::height() / 15),
-//                                   QWidget::width() / 15,
-//                                   (QWidget::height() / 15)-20);
-//        scene->addItem(fire_y);
-//    }
 }
 
 void Game::p1removeBox() {
@@ -414,7 +385,6 @@ void Game::p2bombExploded() {
     p2bomb->setVisible(false);
     p2removeBox();
     bomb2Destroys();
-    //fireDrawer();
     canP2PlantBomb = true;
 }
 
@@ -516,7 +486,7 @@ void Game::p2removeBox() {
 }
 
 void Game::bomb1Destroys() {
-    for(int i = 0 ; i<2 ; i++) {
+    for (int i = 0; i < 2; i++) {
         int c = 0;
         int n = 0;
 
@@ -541,15 +511,39 @@ void Game::bomb1Destroys() {
             c += 50;
             players.at(i)->numOfLives--;
         }
-        if(i==0){
+        if (i == 0) {
             players.at(1)->score += c;
             player2ScoreLabel->setPlainText(QString::number(players.at(1)->score));
             player1NumOfLives->setPlainText(QString::number(players.at(0)->numOfLives));
-        }else if(i==1){
+        } else if (i == 1) {
             players.at(0)->score += c;
             player1ScoreLabel->setPlainText(QString::number(players.at(0)->score));
             player2NumOfLives->setPlainText(QString::number(players.at(1)->numOfLives));
         }
+    }
+    //show the winner if a player lives is finished
+    if (players.at(0)->numOfLives == 0) {
+        auto Player2Wins = new AddPhoto(":/images/Player2wins", (QWidget::width() / 2) - 300,
+                                        (QWidget::height() / 2) - 170,
+                                        600, 339);
+        scene->addItem(Player2Wins);
+        auto returnTomHomeButton = new Button((QWidget::width() / 2) - 150, (QWidget::height() / 15) * 10, 20, 300,
+                                              26, 300, "black", "     Return to home", "white", "black", true);
+        scene->addItem(returnTomHomeButton);
+        connect(returnTomHomeButton, &Button::buttonPressed, this, &Game::returnToHomeButtonPressed);
+        isGamePaused = true;
+        qTimer_gameTimer->stop();
+    } else if (players.at(1)->numOfLives == 0) {
+        auto Player1Wins = new AddPhoto(":/images/Player1wins", (QWidget::width() / 2) - 300,
+                                        (QWidget::height() / 2) - 170,
+                                        600, 339);
+        scene->addItem(Player1Wins);
+        auto returnTomHomeButton = new Button((QWidget::width() / 2) - 150, (QWidget::height() / 15) * 10, 20, 300,
+                                              26, 300, "black", "     Return to home", "white", "black", true);
+        scene->addItem(returnTomHomeButton);
+        connect(returnTomHomeButton, &Button::buttonPressed, this, &Game::returnToHomeButtonPressed);
+        isGamePaused = true;
+        qTimer_gameTimer->stop();
     }
 }
 
@@ -621,7 +615,7 @@ void Game::returnToHomeButtonPressed() {
 }
 
 void Game::bomb2Destroys() {
-    for(int i = 0 ; i<2 ; i++) {
+    for (int i = 0; i < 2; i++) {
         int c = 0;
         int n = 0;
         if (p2bomb->x() >= players.at(i)->x() &&
@@ -645,15 +639,38 @@ void Game::bomb2Destroys() {
             c += 50;
             players.at(i)->numOfLives--;
         }
-        if(i==0){
+        if (i == 0) {
             players.at(1)->score += c;
             player2ScoreLabel->setPlainText(QString::number(players.at(1)->score));
             player1NumOfLives->setPlainText(QString::number(players.at(0)->numOfLives));
-        }else if(i==1){
+        } else if (i == 1) {
             players.at(0)->score += c;
             player1ScoreLabel->setPlainText(QString::number(players.at(0)->score));
             player2NumOfLives->setPlainText(QString::number(players.at(1)->numOfLives));
         }
     }
-
+//show the winner if a player lives is finished
+    if (players.at(0)->numOfLives == 0) {
+        auto Player2Wins = new AddPhoto(":/images/Player2wins", (QWidget::width() / 2) - 300,
+                                        (QWidget::height() / 2) - 170,
+                                        600, 339);
+        scene->addItem(Player2Wins);
+        auto returnTomHomeButton = new Button((QWidget::width() / 2) - 150, (QWidget::height() / 15) * 10, 20, 300,
+                                              26, 300, "black", "     Return to home", "white", "black", true);
+        scene->addItem(returnTomHomeButton);
+        connect(returnTomHomeButton, &Button::buttonPressed, this, &Game::returnToHomeButtonPressed);
+        isGamePaused = true;
+        qTimer_gameTimer->stop();
+    } else if (players.at(1)->numOfLives == 0) {
+        auto Player1Wins = new AddPhoto(":/images/Player1wins", (QWidget::width() / 2) - 300,
+                                        (QWidget::height() / 2) - 170,
+                                        600, 339);
+        scene->addItem(Player1Wins);
+        auto returnTomHomeButton = new Button((QWidget::width() / 2) - 150, (QWidget::height() / 15) * 10, 20, 300,
+                                              26, 300, "black", "     Return to home", "white", "black", true);
+        scene->addItem(returnTomHomeButton);
+        connect(returnTomHomeButton, &Button::buttonPressed, this, &Game::returnToHomeButtonPressed);
+        isGamePaused = true;
+        qTimer_gameTimer->stop();
+    }
 }
